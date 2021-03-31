@@ -1,0 +1,8 @@
+torch
+torchvision
+fastapi
+gunicorn
+uvicorn
+aiofiles
+python-multipart
+
