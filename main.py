@@ -1,28 +1,26 @@
 import io
 import os
 import time
+import urllib.request as request
 
 from PIL import Image
 from fastapi import FastAPI
 from fastapi.datastructures import UploadFile
 from fastapi.params import File
-import urllib.request as request
 from starlette.responses import FileResponse
 import torch
 import torch.nn as nn
 from torchvision import transforms
 from torchvision.utils import save_image
 
-app = FastAPI()
 
 # Globals
+app = FastAPI()
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"  # type: ignore
 MODELS_PATH = 'models'
 OUTPUT_FOLDER = 'results'
 if not os.path.exists(OUTPUT_FOLDER):
     os.mkdir(OUTPUT_FOLDER)
-
-# Default Values
-DEVICE = "cuda" if torch.cuda.is_available() else "cpu"  # type: ignore
 
 
 # loss functions
@@ -191,7 +189,6 @@ def test_transform():
 # extract style and content features
 def feat_extractor(vgg, content, style):
     # extract used layers from vgg network
-    norm = nn.Sequential(*list(vgg.children())[:1])
     enc_1 = nn.Sequential(*list(vgg.children())[:4])  # input -> relu1_1
     enc_2 = nn.Sequential(*list(vgg.children())[4:11])  # relu1_1 -> relu2_1
     enc_3 = nn.Sequential(*list(vgg.children())[11:18])  # relu2_1 -> relu3_1
@@ -199,7 +196,6 @@ def feat_extractor(vgg, content, style):
     enc_5 = nn.Sequential(*list(vgg.children())[31:44])  # relu4_1 -> relu5_1
 
     # move everything to GPU
-    norm.to(DEVICE)
     enc_1.to(DEVICE)
     enc_2.to(DEVICE)
     enc_3.to(DEVICE)
@@ -220,7 +216,7 @@ def feat_extractor(vgg, content, style):
 def style_transfer(vgg, decoder, sa_module, content, style, alpha=1):
     assert (0.0 <= alpha <= 1.0)  # make sure alpha value is valid
 
-    # move samodule and decoder to gpu
+    # move samodule and decoder to gpu (no need to move vgg since we dont use it all)
     sa_module.to(DEVICE)
     decoder.to(DEVICE)
 
@@ -228,11 +224,12 @@ def style_transfer(vgg, decoder, sa_module, content, style, alpha=1):
     Content4_1, Content5_1, Style4_1, Style5_1 = feat_extractor(
         vgg, content, style)
 
+    # get content features importance (used to select how much of content to keep according to alpha)
     Fccc = sa_module(Content4_1, Content4_1, Content5_1, Content5_1)
 
     # get final image features
     feat = sa_module(Content4_1, Style4_1, Content5_1, Style5_1)
-    # change final image according to alpha values
+    # change final image according to alpha value
     feat = feat * alpha + Fccc * (1 - alpha)
     # return decoded final image
     return decoder(feat)
@@ -273,15 +270,18 @@ def style_image(content_img: UploadFile = File(...), style_img: UploadFile = Fil
         style = Image.open(io.BytesIO(
             style_img.file.read())).convert('RGB')
 
+    # apply transformations
     trans = test_transform()
     content = io.BytesIO(content_img.file.read())  # read image as bytes
     content = trans(Image.open(content).convert('RGB')).unsqueeze(0)
     style = trans(style).unsqueeze(0)
 
-    output = style_transfer(vgg, decoder, samodule,
-                            content, style, alpha)
+    # finally perform style transfer without tracking gradients
+    with torch.no_grad():
+        output = style_transfer(vgg, decoder, samodule,
+                                content, style, alpha)
 
-    out_name = f'{OUTPUT_FOLDER}/image_{time.time()}_{alpha}.jpg'
+    out_name = f'{OUTPUT_FOLDER}/result_{time.time()}_{alpha}.jpg'
     save_image(output, out_name)
 
     return FileResponse(out_name)
