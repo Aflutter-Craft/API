@@ -275,4 +275,4 @@ def style_image(content_img: UploadFile = File(...), style_img: UploadFile = Fil
     out_name = f'{OUTPUT_FOLDER}/result_{time.time()}_{alpha}.jpg'
     save_image(output, out_name)
 
-    return FileResponse(out_name)
+    return FileResponse(f'{OUTPUT_FOLDER}/{out_name}')
