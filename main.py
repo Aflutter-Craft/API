@@ -267,11 +267,27 @@ def style_image(content_img: UploadFile = File(...), style_img: UploadFile = Fil
     content = trans(Image.open(content).convert('RGB')).unsqueeze(0)
     style = trans(style).unsqueeze(0)
 
+    # prepare models
+    decoder = decoder_arch
+    samodule = SAModule(in_dim=512)
+    vgg = vgg_arch
+
+    # set to evalaution mode (faster)
+    decoder.eval()
+    samodule.eval()
+    vgg.eval()
+
+    # load saved model states
+    decoder.load_state_dict(torch.load(f'{MODELS_PATH}/decoder.pth'))
+    samodule.load_state_dict(torch.load(f'{MODELS_PATH}/transformer.pth'))
+    vgg.load_state_dict(torch.load(f'{MODELS_PATH}/vgg.pth'))
+
     # finally perform style transfer without tracking gradients
     with torch.no_grad():
         output = style_transfer(vgg, decoder, samodule,
                                 content, style, alpha)
 
+    # save output image
     out_name = f'{OUTPUT_FOLDER}/result_{time.time()}_{alpha}.jpg'
     save_image(output, out_name)
 
