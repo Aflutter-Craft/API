@@ -4,7 +4,7 @@ import time
 import urllib.request as request
 
 from PIL import Image
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.datastructures import UploadFile
 from fastapi.params import File
 from starlette.responses import FileResponse
@@ -239,19 +239,10 @@ def style_transfer(vgg, decoder, sa_module, content, style, alpha=1):
 def style_image(content_img: UploadFile = File(...), style_img: UploadFile = File(b""),  # type: ignore
                 style_path: str = '', alpha: float = 0.8) -> FileResponse:
 
-    decoder = decoder_arch
-    samodule = SAModule(in_dim=512)
-    vgg = vgg_arch
-
-    # set to evalaution mode (faster)
-    decoder.eval()
-    samodule.eval()
-    vgg.eval()
-
-    # load saved model states
-    decoder.load_state_dict(torch.load(f'{MODELS_PATH}/decoder.pth'))
-    samodule.load_state_dict(torch.load(f'{MODELS_PATH}/transformer.pth'))
-    vgg.load_state_dict(torch.load(f'{MODELS_PATH}/vgg.pth'))
+    # check if both style_img and style_path are empty
+    if style_path == '' or style_img == b"":
+        raise HTTPException(
+            status_code=400, detail="Either Style image or Style path must be provided!")
 
     # get style image if path was passed otherwise read sent image bytes
     if style_path != '':
