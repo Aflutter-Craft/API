@@ -180,8 +180,8 @@ class SAModule(nn.Module):
 # transforms to perfom on image before using
 def test_transform():
     transform_list = []
-    transform_list.append(transforms.ToTensor())
     transform_list.append(transforms.Resize(512))
+    transform_list.append(transforms.ToTensor())
     transform = transforms.Compose(transform_list)
     return transform
 
