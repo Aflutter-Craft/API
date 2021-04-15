@@ -7,7 +7,7 @@ from PIL import Image
 from fastapi import FastAPI, HTTPException
 from fastapi.datastructures import UploadFile
 from fastapi.params import File
-from starlette.responses import FileResponse
+from starlette.responses import FileResponse, HTMLResponse
 import torch
 import torch.nn as nn
 from torchvision import transforms
@@ -233,6 +233,11 @@ def style_transfer(vgg, decoder, sa_module, content, style, alpha=1):
     feat = feat * alpha + Fccc * (1 - alpha)
     # return decoded final image
     return decoder(feat)
+
+
+@app.get('/')
+def home() -> HTMLResponse:
+    return HTMLResponse("use /style API route for styling images")
 
 
 @app.post('/style')
