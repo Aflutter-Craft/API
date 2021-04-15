@@ -16,7 +16,8 @@ from torchvision.utils import save_image
 
 # Globals
 app = FastAPI()
-DEVICE = "cuda" if torch.cuda.is_available() else "cpu"  # type: ignore
+DEVICE = torch.device("cuda" if torch.cuda.is_available()  # type: ignore
+                      else "cpu")
 MODELS_PATH = 'models'
 OUTPUT_FOLDER = 'results'
 if not os.path.exists(OUTPUT_FOLDER):
