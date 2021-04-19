@@ -246,7 +246,7 @@ def style_image(content_img: UploadFile = File(...), style_img: UploadFile = Fil
                 style_path: str = '', alpha: float = 0.8) -> FileResponse:
 
     # check if both style_img and style_path are empty
-    if style_path == '' or style_img == b"":
+    if style_path == '' and style_img == b"":
         raise HTTPException(
             status_code=400, detail="Either Style image or Style path must be provided!")
 
