@@ -5,7 +5,7 @@ import urllib.request as urlrequest
 from PIL import Image
 from flasgger import Swagger, swag_from
 from flask import Flask, request, send_file
-import torch
+from torch import no_grad
 from torchvision.utils import save_image
 from werkzeug.exceptions import BadRequest
 
@@ -101,7 +101,7 @@ def style_image():
 
     # finally perform style transfer without tracking gradients
     vgg, samodule, decoder = load_models()
-    with torch.no_grad():
+    with no_grad():
         output = style_transfer(vgg, decoder, samodule,
                                 content, style, alpha)
 

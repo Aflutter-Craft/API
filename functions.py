@@ -1,6 +1,5 @@
 import os
-
-import torch
+from pathlib import Path
 import torch.nn as nn
 from torchvision import transforms
 
@@ -10,13 +9,11 @@ ALLOWED_EXTENSIONS = set(['jpg', 'jpeg', 'png'])
 
 # create output dir if it doesnt exist
 OUTPUT_FOLDER = 'results'
-if not os.path.exists(OUTPUT_FOLDER):
-    os.mkdir(OUTPUT_FOLDER)
+Path(OUTPUT_FOLDER).mkdir(exist_ok=True, parents=True)
 
 # make sure styles folder exists
 STYLES_DIR = 'styles'
-if not os.path.exists(STYLES_DIR):
-    os.mkdir(STYLES_DIR)
+Path(STYLES_DIR).mkdir(exist_ok=True, parents=True)
 
 
 # check if a file meets allowed extentions
