@@ -49,7 +49,7 @@ app.config['SWAGGER'] = {
 swagger = Swagger(app, config=swagger_config, template=swagger_template)
 
 
-@app.route('/style', methods=["POST"])
+@app.route('/', methods=["POST"])
 @swag_from("api_docs.yml")  # docs
 def style_image():
     content_img = request.files.get('content_img')
