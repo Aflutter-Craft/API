@@ -15,8 +15,8 @@ An API for style transfer build using Flask + Swagger.
 
 ## API docs
 
-![docs](docs.png)
+![docs](screens/docs.png)
 
 ## General Workflow
 
-![workflow](workflow.png)
+![workflow](screens/workflow.png)
