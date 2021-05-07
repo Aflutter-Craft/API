@@ -13,6 +13,11 @@ OUTPUT_FOLDER = 'results'
 if not os.path.exists(OUTPUT_FOLDER):
     os.mkdir(OUTPUT_FOLDER)
 
+# make sure styles folder exists
+STYLES_DIR = 'styles'
+if not os.path.exists(STYLES_DIR):
+    os.mkdir(STYLES_DIR)
+
 
 # check if a file meets allowed extentions
 def allowed_file(filename):
