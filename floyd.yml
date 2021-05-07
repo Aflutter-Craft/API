@@ -1,0 +1,5 @@
+env: pytorch-1.5
+data:
+  - source: blacksuan19/datasets/pretrained-models/1
+    destination: models
+
