@@ -56,7 +56,13 @@ def style_image():
     style_img = request.files.get('style_img')
     style_path = request.form.get('style_path')
     alpha = request.form.get('alpha')
-    alpha = float(alpha)  # type: ignore
+
+    # convert alpha to a number
+    # or set default value if no alpha was passed
+    if alpha:
+        alpha = float(alpha)  # type: ignore
+    else:
+        alpha = 0.8
 
     # alpha value validation
     if alpha > 1.0 or alpha < 0:
