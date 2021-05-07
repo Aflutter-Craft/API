@@ -38,7 +38,7 @@ swagger_template = {
             "email": "abubakaryagob@gmail.com",
             "url": "https://blacksuan19.tk",
         },
-        "version": "0.0.5"
+        "version": "0.0.7"
     },
 }
 
