@@ -1,5 +1,24 @@
+import os
+
+import torch
 import torch.nn as nn
 from torchvision import transforms
+
+# vars
+# allowed files extentions
+ALLOWED_EXTENSIONS = set(['jpg', 'jpeg', 'png'])
+
+# create output dir if it doesnt exist
+OUTPUT_FOLDER = 'results'
+if not os.path.exists(OUTPUT_FOLDER):
+    os.mkdir(OUTPUT_FOLDER)
+
+
+# check if a file meets allowed extentions
+def allowed_file(filename):
+    return '.' in filename and \
+        filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 # loss functions
 def calc_mean_std(feat, eps=1e-5):

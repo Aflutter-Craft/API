@@ -1,8 +1,5 @@
 torch
 torchvision
-fastapi
-gunicorn
-uvicorn
-aiofiles
-python-multipart
-
+flask
+flasgger
+werkzeug

@@ -1,0 +1,27 @@
+Style Transfer endpoint
+---
+parameters:
+  - name: content_img
+    in: formData
+    required: true
+    description: The content image
+    type: file
+  - name: style_img
+    in: formData
+    description: Custom Style image
+    type: file
+  - name: style_path
+    in: formData
+    description: Style image path (local to S3 bucket)
+    type: string
+  - name: alpha
+    in: formData
+    description: content style trande-off
+    default: 0.8
+    type: double
+responses:
+  200:
+    description: The resulting image from style transfer
+    type: image
+  500:
+    description: Internal Server Error
