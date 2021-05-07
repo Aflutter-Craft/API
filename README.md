@@ -1,4 +1,4 @@
-An API for style transfer build using FastAPI.
+An API for style transfer build using Flask + Swagger.
 
 ## Features
 
@@ -9,8 +9,9 @@ An API for style transfer build using FastAPI.
 ## Running locally
 
 - install requirements with `pip install -r requirements.txt`
-- start API server with `uvicorn main:app --reload`
-- navigate to `http://127.0.0.1:8000/docs` to test from web.
+- for auto reload set these variables in your shell `export FLASK_APP=app.py && export FLASK_ENV=development`
+- start API server with `flask run`
+- navigate to `http://127.0.0.1:5000/docs/` to test from web.
 
 ## API docs
 
