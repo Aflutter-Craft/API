@@ -1,3 +1,5 @@
+import os
+
 from net import *
 
 
@@ -5,9 +7,12 @@ from net import *
 DEVICE = torch.device("cuda" if torch.cuda.is_available()  # type: ignore
                       else "cpu")
 
+# on floydhub the models are mounted as a dataset to /models
+MODELS_PATH = '/models' if os.path.exists("/models") else 'models'
+
 
 # load pretrained models
-def load_models(MODELS_PATH='models'):
+def load_models():
     # prepare models
     decoder = decoder_arch
     samodule = SAModule(in_dim=512)
