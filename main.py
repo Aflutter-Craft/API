@@ -23,7 +23,6 @@ if not os.path.exists(OUTPUT_FOLDER):
     os.mkdir(OUTPUT_FOLDER)
 
 
-
 # perform style transfer
 def style_transfer(vgg, decoder, sa_module, content, style, alpha=1):
     assert (0.0 <= alpha <= 1.0)  # make sure alpha value is valid
@@ -108,4 +107,4 @@ def style_image(content_img: UploadFile = File(...), style_img: UploadFile = Fil
     out_name = f'{OUTPUT_FOLDER}/result_{time.time()}_{alpha}.jpg'
     save_image(output, out_name)
 
-    return FileResponse(f'{OUTPUT_FOLDER}/{out_name}')
+    return FileResponse(out_name)
