@@ -4,7 +4,8 @@ import urllib.request as urlrequest
 
 from PIL import Image
 from flasgger import Swagger, swag_from
-from flask import Flask, request, send_file
+import flask
+from flask import Flask, request
 from torch import no_grad
 from torchvision.utils import save_image
 from werkzeug.exceptions import BadRequest
@@ -115,7 +116,10 @@ def style_image():
     out_name = f'{OUTPUT_FOLDER}/result_{time.time()}_{alpha}.jpg'
     save_image(output, out_name)
 
-    return send_file(out_name, mimetype='image/jpg')
+    # convert image to base64
+    image = get_encoded_img(out_name)
+    response = flask.jsonify({'image': image})
+    return response
 
 
 # only used for local developmenet and testing

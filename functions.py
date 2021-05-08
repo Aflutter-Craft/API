@@ -1,5 +1,8 @@
-import os
+import base64
+import io
 from pathlib import Path
+
+from PIL import Image
 import torch.nn as nn
 from torchvision import transforms
 
@@ -74,3 +77,13 @@ def feat_extractor(vgg, content, style, DEVICE):
     Style5_1 = enc_5(Style4_1)
 
     return Content4_1, Content5_1, Style4_1, Style5_1
+
+
+# encode given image as base64
+def get_encoded_img(image_path):
+    img = Image.open(image_path, mode='r')
+    img_byte_arr = io.BytesIO()
+    img.save(img_byte_arr, format='PNG')
+    encoded_image = base64.encodebytes(
+        img_byte_arr.getvalue()).decode('ascii')
+    return encoded_image
