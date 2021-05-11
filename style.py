@@ -39,6 +39,10 @@ def style_transfer(vgg, decoder, sa_module, content, style, alpha=1):
     sa_module.to(DEVICE)
     decoder.to(DEVICE)
 
+    # move content and style to device as well
+    content = content.to(DEVICE)
+    style = style.to(DEVICE)
+
     # get features for both style and content
     Content4_1, Content5_1, Style4_1, Style5_1 = feat_extractor(
         vgg, content, style, DEVICE)
